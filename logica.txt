@@ -1,0 +1,24 @@
+segue sempre a ordem dentro da função (analisar)
+   1- procura bomba ("todas"): preenchendo variável "posicoesMinas".
+   2- procura posicao segura ("todas"): e aplica campoMinado.Abrir().
+
+Ciclo: procura bombas --> abre posição --> procura bombas --> abre posição ...
+   . Ciclo ocorre até campoMinado.JogoStatus() ser diferente de 0.
+   . abre posição: pode ser programado para abrir o máximo que da ao redor da 
+posição na qual está em foco, ai depois procura as bombas, o máximo possível
+também.
+
+Procura bomba:
+   marcação 1: (1 no chão) procura em todos os 1's disponíveis, se tiver só 
+1 marcação "-" ao redor -> coloca posição em posicoesMinas.
+      . Como procurar em todos os 1's: só percorrer cada posição da string 
+        tabuleiro.
+   marcação 2: se tiver só 2 marcação "-" ao redor ...
+   ...
+
+Procura posicao segura:
+   marcação 1: a partir de todos 1's disponíveis, se tiver 1 mina já marcada
+ao seu redor (dentro de posicoesMinas), todas as outras marcações "-" podem 
+ser abertas.
+   marcação 2: se já tiver 2 minas marcadas ao seu redor ...
+   ...
