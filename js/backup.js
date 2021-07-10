@@ -54,7 +54,7 @@ function procuraPosicoesSeguras() {
     for (let i = 0; i < iteracoes; i++) {
         //pega a primeira posição do analisar e já a retira
         indice = analisar.splice(0, 1)[0];
-        console.log("INDICE: " + indice);
+        console.log("INDICE: " + indice); // posição a ser analisada
 
         //verificar se ao redor de indice já existe uma mina
         let redorConcreto = redorAbstrato.map((valor) => valor += indice);
@@ -62,6 +62,7 @@ function procuraPosicoesSeguras() {
         redorConcreto = redorConcreto.filter((valor) => tabuleiro[valor] != "\r");
         numeroMinas = 0;
         console.log("Redor: " + redorConcreto);
+        //ATÉ AQUI ESTÁ CORRETO 
         for (posicao of redorConcreto) {
             if (posicoesMinas.includes(posicao)) {
                 numeroMinas += 1;
@@ -70,13 +71,17 @@ function procuraPosicoesSeguras() {
 
         //verifica se a posição (indice) é segura para abrir.
         if (numeroMinas == tabuleiro[indice]) {
-            analisar.push(indice); // já analisa nessa mesma iteração do while
-            iteracoes += 1;
-            // campoMinado.Abrir(converteLinhaColuna(indice)[0], converteLinhaColuna(indice)[1]);
-            // OBS: não esquece de atualizar o tabuleiro (instanciar de novo)
-            console.log("Abrirei o indice " + indice + ": linha" +
-                converteLinhaColuna(indice)[0] + ", coluna " +
-                converteLinhaColuna(indice)[1]);
+
+            for (posicao of redorConcreto) {
+                if (tabuleiro[posicao] == '-' && !(posicoesMinas.includes(posicao))) {
+                    console.log("Abrirei o indice " + posicao + ": linha " +
+                        converteLinhaColuna(posicao)[0] + ", coluna " +
+                        converteLinhaColuna(posicao)[1]);
+                    campoMinado.Abrir(converteLinhaColuna(posicao)[0], converteLinhaColuna(posicao)[1]);
+                    tabuleiro = campoMinado.Tabuleiro();
+                    document.getElementById('exibir-execucao').innerHTML += '<pre>' + campoMinado.Tabuleiro() + '</pre>';
+                }
+            }
         }
 
     }
