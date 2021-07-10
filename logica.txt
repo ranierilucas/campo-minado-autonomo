@@ -1,4 +1,4 @@
-segue sempre a ordem dentro da função (analisar)
+segue sempre a ordem dentro da função (jogar)
    1- procura bomba ("todas"): preenchendo variável "posicoesMinas".
    2- procura posicao segura ("todas"): e aplica campoMinado.Abrir().
 
@@ -8,7 +8,7 @@ Ciclo: procura bombas --> abre posição --> procura bombas --> abre posição .
 posição na qual está em foco, ai depois procura as bombas, o máximo possível
 também.
 
-Procura bomba:
+Procura bomba: <<FEITO>>
    marcação 1: (1 no chão) procura em todos os 1's disponíveis, se tiver só 
 1 marcação "-" ao redor -> coloca posição em posicoesMinas.
       . Como procurar em todos os 1's: só percorrer cada posição da string 
@@ -22,3 +22,9 @@ ao seu redor (dentro de posicoesMinas), todas as outras marcações "-" podem
 ser abertas.
    marcação 2: se já tiver 2 minas marcadas ao seu redor ...
    ...
+
+Ideia:
+   Ao abrir as posições seguras, a gente já coloca as novas posições abertas
+na lista de posições a serem analisadas na mesma iteração (faz um push), e analisa
+tudo até a lista de posições a serem analisadas seja zero, ai sim passa para
+proxima iteração (do while em "jogar").
