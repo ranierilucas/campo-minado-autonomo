@@ -7,10 +7,10 @@ function procuraMinas() {
     let tabuleiro = campoMinado.Tabuleiro();
     const redorAbstrato = [-12, -11, -10, -1, 0, +1, 10, 11, 12];
 
-    //Procura minas focando em posições com j (1,2,3,4,5) de minas ao redor
+    ////////Procura minas focando em posições com j (1,2,3,4,5) de minas ao redor////////
     for (j = 1; j < 6; j++) {
-        //Para cada j (ex: j =1) procura-se minas ao redor da posição i (caso i
-        //seja igual ao número de minas que estamos focando (j))
+        ////////Para cada j (ex: j =1) procura-se minas ao redor da posição i (caso i
+        //seja igual ao número de minas que estamos focando (j))////////
         for (let i = 0; i < tabuleiro.length; i++) {
             if (tabuleiro[i] == j) {
                 let posicao = i;
@@ -57,7 +57,7 @@ function procuraPosicoesSeguras() {
     let indice = null;
     let numeroMinas = null;
 
-    // do {
+    ////////Pega para analisar todas posições válidas ao redor de uma mina////////
     for (posicao of posicoesMinas) {
         let redorConcreto = redorAbstrato.map((valor) => valor += posicao);
         redorConcreto = redorConcreto.filter((valor) => valor > 0);
@@ -66,29 +66,28 @@ function procuraPosicoesSeguras() {
         analisar = analisar.concat(redorConcreto);
     }
 
+    ////////Para cada posição válida, abir as posições seguras ao seu redor////////
+    analisar = Array.from(new Set(analisar)); // retirar posições repetidas
     console.log(analisar);
     iteracoes = analisar.length;
     for (let i = 0; i < iteracoes; i++) {
-        //pega a primeira posição do analisar e já a retira
-        indice = analisar.splice(0, 1)[0];
+        indice = analisar.splice(0, 1)[0]; //pega a primeira posição do "analisar" e já a retira
         console.log("INDICE: " + indice); // posição a ser analisada
 
-        //verificar se ao redor de indice já existe uma mina
+        ////////verificar quantas minas existem ao redor do indice////////
         let redorConcreto = redorAbstrato.map((valor) => valor += indice);
         redorConcreto = redorConcreto.filter((valor) => valor > 0);
         redorConcreto = redorConcreto.filter((valor) => tabuleiro[valor] != "\r");
         numeroMinas = 0;
         console.log("Redor: " + redorConcreto);
-        //ATÉ AQUI ESTÁ CORRETO 
         for (posicao of redorConcreto) {
             if (posicoesMinas.includes(posicao)) {
                 numeroMinas += 1;
             }
         }
 
-        //verifica se a posição (indice) é segura para abrir.
+        ////////verificar qual das posições ao redor de indice é segura para abrir////////
         if (numeroMinas == tabuleiro[indice]) {
-
             for (posicao of redorConcreto) {
                 if (tabuleiro[posicao] == '-' && !(posicoesMinas.includes(posicao))) {
                     console.log("Abrirei o indice " + posicao + ": linha " +
@@ -102,17 +101,16 @@ function procuraPosicoesSeguras() {
         }
 
     }
-
-    // } while (analisar != [])
 }
 
 function jogar() {
-    // let tabuleiro = campoMinado.Tabuleiro(); //lembra de atualizá-lo.
     while (campoMinado.JogoStatus() == 0) {
         procuraMinas();
         procuraPosicoesSeguras();
     }
+    console.log("O jogo terminou com o status: ", campoMinado.JogoStatus());
 }
 
 document.getElementById('exibir-execucao').innerHTML += '----------- Início do jogo -----------';
 document.getElementById('exibir-execucao').innerHTML += '<pre>' + campoMinado.Tabuleiro() + '</pre>';
+jogar();
