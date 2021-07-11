@@ -1,4 +1,6 @@
-segue sempre a ordem dentro da função (jogar)
+OBSERVAÇÃO: Este documento é informal! Serviu para auxiliar o desenvolvimento.
+
+Segue sempre a ordem dentro da função (jogar)
    1- procura bomba ("todas"): preenchendo variável "posicoesMinas".
    2- procura posicao segura ("todas"): e aplica campoMinado.Abrir().
 
@@ -8,7 +10,7 @@ Ciclo: procura bombas --> abre posição --> procura bombas --> abre posição .
 posição na qual está em foco, ai depois procura as bombas, o máximo possível
 também.
 
-Procura bomba: <<FEITO>>
+Procura bomba: 
    marcação 1: (1 no chão) procura em todos os 1's disponíveis, se tiver só 
 1 marcação "-" ao redor -> coloca posição em posicoesMinas.
       . Como procurar em todos os 1's: só percorrer cada posição da string 
@@ -24,7 +26,8 @@ ser abertas.
    ...
 
 Ideia:
-   Ao abrir as posições seguras, a gente já coloca as novas posições abertas
+   Ao abrir as posições seguras, já coloca as novas posições abertas
 na lista de posições a serem analisadas na mesma iteração (faz um push), e analisa
 tudo até a lista de posições a serem analisadas seja zero, ai sim passa para
 proxima iteração (do while em "jogar").
+   Implementação retirada: não estava dentro do que foi pedido no desafio.

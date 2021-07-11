@@ -1,8 +1,15 @@
 var campoMinado = new CampoMinado();
 let posicoesMinas = [];
 let posicoesSeguras = [];
-let posicoesFechadas = []; //"-"
 
+////Recebe o valor em indice da string e retorna a posição em linha e coluna////
+function converteLinhaColuna(posicao) {
+    let linha = parseInt(posicao / 11);
+    let coluna = posicao - parseInt(posicao / 11) * 11;
+    return [linha + 1, coluna + 1];
+}
+
+////procuraMinas encontra todas as minhas que podem ser encontrada na iteração atual////
 function procuraMinas() {
     let tabuleiro = campoMinado.Tabuleiro();
     const redorAbstrato = [-12, -11, -10, -1, 0, +1, 10, 11, 12];
@@ -26,29 +33,28 @@ function procuraMinas() {
                         }
                     }
                 }
-                console.log(fechados);
-                console.log("ENCERROU POSICAO " + i + "\r\n");
 
                 //Caso o numero de posições ao redor seja igual ao número no
-                //qual estmaos focando, todas essas posições possuem minas.
+                //qual estamos focando, todas essas posições possuem minas.
                 if (fechados == j) {
+                    for (valor of ultimasMinas) {
+                        if (!posicoesMinas.includes(valor)) {
+                            document.getElementById('exibir-execucao')
+                                .innerHTML += '<br>Bomba encontrada: linha(' +
+                                converteLinhaColuna(valor)[0] +
+                                ') / coluna(' +
+                                converteLinhaColuna(valor)[1] + ')';
+                        }
+                    }
                     posicoesMinas = posicoesMinas.concat(ultimasMinas);
                 }
             }
         }
-        console.log("-------------------------- FIM DO J = " + j + " --------------------------")
     }
     posicoesMinas = Array.from(new Set(posicoesMinas)); //retira posições repetidas
-    console.log(posicoesMinas);
 }
 
-function converteLinhaColuna(posicao) {
-    let linha = parseInt(posicao / 11);
-    let coluna = posicao - parseInt(posicao / 11) * 11;
-
-    return [linha + 1, coluna + 1];
-}
-
+////procuraPosicoesSeguras procura e abre as posições que analisadas como seguras////
 function procuraPosicoesSeguras() {
     let tabuleiro = campoMinado.Tabuleiro();
     const redorAbstrato = [-12, -11, -10, -1, 0, +1, 10, 11, 12];
@@ -68,18 +74,15 @@ function procuraPosicoesSeguras() {
 
     ////////Para cada posição válida, abir as posições seguras ao seu redor////////
     analisar = Array.from(new Set(analisar)); // retirar posições repetidas
-    console.log(analisar);
     iteracoes = analisar.length;
     for (let i = 0; i < iteracoes; i++) {
         indice = analisar.splice(0, 1)[0]; //pega a primeira posição do "analisar" e já a retira
-        console.log("INDICE: " + indice); // posição a ser analisada
 
         ////////verificar quantas minas existem ao redor do indice////////
         let redorConcreto = redorAbstrato.map((valor) => valor += indice);
         redorConcreto = redorConcreto.filter((valor) => valor > 0);
         redorConcreto = redorConcreto.filter((valor) => tabuleiro[valor] != "\r");
         numeroMinas = 0;
-        console.log("Redor: " + redorConcreto);
         for (posicao of redorConcreto) {
             if (posicoesMinas.includes(posicao)) {
                 numeroMinas += 1;
@@ -90,9 +93,10 @@ function procuraPosicoesSeguras() {
         if (numeroMinas == tabuleiro[indice]) {
             for (posicao of redorConcreto) {
                 if (tabuleiro[posicao] == '-' && !(posicoesMinas.includes(posicao))) {
-                    console.log("Abrirei o indice " + posicao + ": linha " +
-                        converteLinhaColuna(posicao)[0] + ", coluna " +
-                        converteLinhaColuna(posicao)[1]);
+                    document.getElementById('exibir-execucao').innerHTML +=
+                        '<br>Abrindo casa: linha(' + converteLinhaColuna(posicao)[0] +
+                        ') / coluna(' + converteLinhaColuna(posicao)[1] + ')';
+
                     campoMinado.Abrir(converteLinhaColuna(posicao)[0], converteLinhaColuna(posicao)[1]);
                     tabuleiro = campoMinado.Tabuleiro();
                     document.getElementById('exibir-execucao').innerHTML += '<pre>' + campoMinado.Tabuleiro() + '</pre>';
@@ -103,12 +107,19 @@ function procuraPosicoesSeguras() {
     }
 }
 
+////Responsável por chamar as funções "procuraMinas" e "procuraPosicoesSeguras"////
+////repetidamente, até o status do jogo ser 1 (o que foi pedido pelo desafio)//// 
 function jogar() {
     while (campoMinado.JogoStatus() == 0) {
+        document.getElementById('exibir-execucao').innerHTML += '----------- Status: Jogo em aberto -----------';
         procuraMinas();
+        document.getElementById('exibir-execucao').innerHTML += '<pre>' + campoMinado.Tabuleiro() + '</pre>';
         procuraPosicoesSeguras();
     }
-    console.log("O jogo terminou com o status: ", campoMinado.JogoStatus());
+    if (campoMinado.JogoStatus() == 1) {
+        document.getElementById('exibir-execucao').innerHTML += '----------- Status: Vitoria -----------';
+        document.getElementById('exibir-execucao').innerHTML += '<pre>' + campoMinado.Tabuleiro() + '</pre>';
+    }
 }
 
 document.getElementById('exibir-execucao').innerHTML += '----------- Início do jogo -----------';
